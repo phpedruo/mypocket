@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Check } from 'lucide-react';
+import Image from 'next/image';
 
 const expenseCategories = {
   fixed: {
@@ -119,6 +120,18 @@ if (loading) {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="bg-white p-4 rounded-2xl shadow-lg">
+              <Image 
+                src="/logo.svg" 
+                alt="MyPocket Logo" 
+                width={120} 
+                height={120}
+                className="w-30 h-30"
+              />
+            </div>
+            <span className="text-4xl font-bold text-slate-800 font-raleway">My Pocket</span>
+          </div>
           <h1 className="text-4xl font-bold text-slate-800 mb-2">
             Olá, {userName}! 👋
           </h1>
@@ -139,7 +152,7 @@ if (loading) {
                   <button
                     key={item.id}
                     onClick={() => toggleCategory(item.id)}
-                    className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                    className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all cursor-pointer ${
                       selectedCategories.includes(item.id)
                         ? 'border-emerald-500 bg-emerald-50 shadow-md'
                         : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50'

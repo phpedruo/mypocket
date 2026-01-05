@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useTransactions, useFinancialStats, useMonthlyTrend, useCategoryBreakdown } from '@/lib/hooks/useTransactions';
 import { 
   TrendingUp, 
   TrendingDown, 
   Wallet, 
-  Plus
+  Plus,
+  LogOut
 } from 'lucide-react';
 import { LineChart, Line, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
@@ -32,6 +34,15 @@ export default function DashboardClient() {
       style: 'currency',
       currency: 'BRL'
     }).format(value);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,8 +82,25 @@ export default function DashboardClient() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-slate-800">💰 MyPocket</h1>
+        <div className="mb-8 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Image 
+              src="/logo.svg" 
+              alt="MyPocket Logo" 
+              width={192} 
+              height={192}
+              className="w-48 h-48"
+            />
+            <h1 className="text-4xl font-bold text-slate-800 font-raleway">My Pocket</h1>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+            title="Sair da conta"
+          >
+            <LogOut className="w-5 h-5" />
+            Sair
+          </button>
         </div>
 
         {/* Stats Cards */}
@@ -250,7 +278,7 @@ export default function DashboardClient() {
                     step="0.01"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg placeholder:text-slate-500 text-slate-800"
                     required
                   />
                 </div>
@@ -260,7 +288,7 @@ export default function DashboardClient() {
                     type="text"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg placeholder:text-slate-500 text-slate-800"
                     required
                   />
                 </div>
@@ -270,7 +298,7 @@ export default function DashboardClient() {
                     type="text"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg placeholder:text-slate-500 text-slate-800"
                   />
                 </div>
                 <div>
@@ -279,7 +307,7 @@ export default function DashboardClient() {
                     type="date"
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg"
+                    className="w-full px-4 py-2 border border-slate-300 rounded-lg placeholder:text-slate-500 text-slate-800"
                     required
                   />
                 </div>

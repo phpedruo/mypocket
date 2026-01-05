@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -71,20 +72,26 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        {/* Icon */}
+        {/* Logo */}
         <div className="mb-6 flex justify-center">
-          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 rounded-full shadow-2xl">
-            <div className="text-5xl">💰</div>
+          <div className="bg-white p-8 rounded-3xl shadow-2xl">
+            <Image 
+              src="/logo.svg" 
+              alt="MyPocket Logo" 
+              width={200} 
+              height={200}
+              className="w-50 h-50"
+            />
           </div>
         </div>
 
         {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-2">
+          <h1 className="text-4xl font-bold text-slate-800 mb-2 font-raleway">
             {isSignUp ? 'Criar Conta' : 'Bem-vindo de volta'}
           </h1>
           <p className="text-slate-600">
-            {isSignUp ? 'Comece a gerenciar suas finanças' : 'Acesse sua conta MyPocket'}
+            {isSignUp ? 'Comece a gerenciar suas finanças' : 'Acesse sua conta My Pocket'}
           </p>
         </div>
 
@@ -101,7 +108,7 @@ export default function LoginPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Seu nome completo"
-                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                  className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-slate-500 text-slate-800"
                   required
                 />
               </div>
@@ -116,7 +123,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="seu@email.com"
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-slate-500 text-slate-800"
                 required
               />
             </div>
@@ -130,7 +137,7 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
-                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all"
+                className="w-full px-4 py-3 border-2 border-slate-300 rounded-xl focus:ring-4 focus:ring-emerald-500 focus:border-emerald-500 transition-all placeholder:text-slate-500 text-slate-800"
                 required
                 minLength={6}
               />
