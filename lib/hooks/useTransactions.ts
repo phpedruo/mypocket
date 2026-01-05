@@ -105,33 +105,7 @@ export function useTransactions() {
     }
   };
 
-  const exportTransactions = () => {
-    const dataStr = JSON.stringify(transactions, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `mypocket-backup-${format(new Date(), 'yyyy-MM-dd')}.json`;
-    link.click();
-  };
 
-  const importTransactions = async (file: File) => {
-    try {
-      const text = await file.text();
-      const imported = JSON.parse(text);
-
-      for (const transaction of imported) {
-        await addTransaction({
-          ...transaction,
-          date: new Date(transaction.date),
-        });
-      }
-
-      await fetchTransactions();
-    } catch (err) {
-      throw new Error('Erro ao importar transações');
-    }
-  };
 
   return {
     transactions,
@@ -140,8 +114,6 @@ export function useTransactions() {
     addTransaction,
     updateTransaction,
     deleteTransaction,
-    exportTransactions,
-    importTransactions,
     refreshTransactions: fetchTransactions,
   };
 }

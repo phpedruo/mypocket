@@ -6,15 +6,13 @@ import {
   TrendingUp, 
   TrendingDown, 
   Wallet, 
-  Plus,
-  Download,
-  Upload
+  Plus
 } from 'lucide-react';
 import { LineChart, Line, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { format } from 'date-fns';
 
 export default function DashboardClient() {
-  const { transactions, addTransaction, deleteTransaction, exportTransactions, importTransactions, loading } = useTransactions();
+  const { transactions, addTransaction, deleteTransaction, loading } = useTransactions();
   const stats = useFinancialStats();
   const [chartPeriod, setChartPeriod] = useState(6);
   const monthlyTrend = useMonthlyTrend(chartPeriod);
@@ -59,12 +57,7 @@ export default function DashboardClient() {
     setShowAddModal(false);
   };
 
-  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      await importTransactions(file);
-    }
-  };
+
 
   if (loading) {
     return (
@@ -78,22 +71,8 @@ export default function DashboardClient() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="mb-8">
           <h1 className="text-4xl font-bold text-slate-800">💰 MyPocket</h1>
-          <div className="flex gap-3">
-            <button
-              onClick={exportTransactions}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-            >
-              <Download className="w-5 h-5" />
-              Exportar
-            </button>
-            <label className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 cursor-pointer">
-              <Upload className="w-5 h-5" />
-              Importar
-              <input type="file" accept=".json" onChange={handleImport} className="hidden" />
-            </label>
-          </div>
         </div>
 
         {/* Stats Cards */}
