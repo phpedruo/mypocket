@@ -1,0 +1,245 @@
+import { useState, useEffect, useCallback } from 'react';
+import { startOfMonth, endOfMonth, subMonths, format } from 'date-fns';
+
+export interface Transaction {
+  id: string;
+  type: 'income' | 'expense';
+  amount: number;
+  description: string;
+  date: Date;
+  recurring: boolean;
+  frequency?: string | null;
+  category?: { id: string; name: string; type: string } | null;
+  incomeSource?: { id: string; name: string } | null;
+}
+
+// Hook principal - Gerencia transações
+export function useTransactions() {
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/transactions');
+      
+      if (!response.ok) {
+        throw new Error('Erro ao carregar transações');
+      }
+
+      const data = await response.json();
+      setTransactions(data.map((t: any) => ({
+        ...t,
+        date: new Date(t.date),
+      })));
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erro desconhecido');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchTransactions();
+  }, [fetchTransactions]);
+
+  const addTransaction = async (transaction: Omit<Transaction, 'id'>) => {
+    try {
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...transaction,
+          categoryId: transaction.category?.id,
+          incomeSourceId: transaction.incomeSource?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao adicionar transação');
+      }
+
+      await fetchTransactions();
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const updateTransaction = async (transaction: Transaction) => {
+    try {
+      const response = await fetch('/api/transactions', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...transaction,
+          categoryId: transaction.category?.id,
+          incomeSourceId: transaction.incomeSource?.id,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar transação');
+      }
+
+      await fetchTransactions();
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const deleteTransaction = async (id: string) => {
+    try {
+      const response = await fetch(`/api/transactions?id=${id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        throw new Error('Erro ao deletar transação');
+      }
+
+      await fetchTransactions();
+    } catch (err) {
+      throw err;
+    }
+  };
+
+  const exportTransactions = () => {
+    const dataStr = JSON.stringify(transactions, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `mypocket-backup-${format(new Date(), 'yyyy-MM-dd')}.json`;
+    link.click();
+  };
+
+  const importTransactions = async (file: File) => {
+    try {
+      const text = await file.text();
+      const imported = JSON.parse(text);
+
+      for (const transaction of imported) {
+        await addTransaction({
+          ...transaction,
+          date: new Date(transaction.date),
+        });
+      }
+
+      await fetchTransactions();
+    } catch (err) {
+      throw new Error('Erro ao importar transações');
+    }
+  };
+
+  return {
+    transactions,
+    loading,
+    error,
+    addTransaction,
+    updateTransaction,
+    deleteTransaction,
+    exportTransactions,
+    importTransactions,
+    refreshTransactions: fetchTransactions,
+  };
+}
+
+// Hook para estatísticas financeiras
+export function useFinancialStats() {
+  const { transactions } = useTransactions();
+
+  const totalIncome = transactions
+    .filter(t => t.type === 'income')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const totalExpense = transactions
+    .filter(t => t.type === 'expense')
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const balance = totalIncome - totalExpense;
+
+  // Estatísticas do mês atual
+  const now = new Date();
+  const monthStart = startOfMonth(now);
+  const monthEnd = endOfMonth(now);
+
+  const monthlyIncome = transactions
+    .filter(t => t.type === 'income' && t.date >= monthStart && t.date <= monthEnd)
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  const monthlyExpense = transactions
+    .filter(t => t.type === 'expense' && t.date >= monthStart && t.date <= monthEnd)
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  return {
+    totalIncome,
+    totalExpense,
+    balance,
+    monthlyIncome,
+    monthlyExpense,
+    monthlyBalance: monthlyIncome - monthlyExpense,
+  };
+}
+
+// Hook para tendência mensal
+export function useMonthlyTrend(months: number = 6) {
+  const { transactions } = useTransactions();
+
+  const trend = [];
+  const now = new Date();
+
+  for (let i = months - 1; i >= 0; i--) {
+    const targetDate = subMonths(now, i);
+    const monthStart = startOfMonth(targetDate);
+    const monthEnd = endOfMonth(targetDate);
+
+    const income = transactions
+      .filter(t => t.type === 'income' && t.date >= monthStart && t.date <= monthEnd)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const expense = transactions
+      .filter(t => t.type === 'expense' && t.date >= monthStart && t.date <= monthEnd)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    trend.push({
+      month: format(targetDate, 'MMM/yy'),
+      income,
+      expense,
+      balance: income - expense,
+    });
+  }
+
+  return trend;
+}
+
+// Hook para breakdown por categoria
+export function useCategoryBreakdown(type: 'income' | 'expense') {
+  const { transactions } = useTransactions();
+
+  const filtered = transactions.filter(t => t.type === type);
+
+  const categories = type === 'expense' 
+    ? Array.from(new Set(filtered.map(t => t.category?.name).filter(Boolean)))
+    : Array.from(new Set(filtered.map(t => t.incomeSource?.name).filter(Boolean)));
+
+  const result = categories.map(cat => {
+    const amount = filtered
+      .filter(t => type === 'expense' ? t.category?.name === cat : t.incomeSource?.name === cat)
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      name: cat as string,
+      value: amount,
+      percentage: 0, // Será calculado depois
+    };
+  }).filter(item => item.value > 0);
+
+  const total = result.reduce((sum, item) => sum + item.value, 0);
+  result.forEach(item => {
+    item.percentage = total > 0 ? (item.value / total) * 100 : 0;
+  });
+
+  return result.sort((a, b) => b.value - a.value);
+}

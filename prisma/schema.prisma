@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// User table - autenticação e perfil
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relacionamentos
+  transactions Transaction[]
+  categories   Category[]
+  incomeSources IncomeSource[]
+
+  @@map("users")
+}
+
+// Categories - categorias de despesas selecionadas pelo usuário
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  type      String   // "Fixed", "Variable", "Essential", "Non-Essential"
+  userId    String
+  createdAt DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("categories")
+}
+
+// IncomeSource - fontes de renda selecionadas
+model IncomeSource {
+  id        String   @id @default(uuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@map("income_sources")
+}
+
+// Transaction - receitas e despesas
+model Transaction {
+  id          String   @id @default(uuid())
+  type        String   // "income" ou "expense"
+  amount      Float
+  description String
+  date        DateTime
+  recurring   Boolean  @default(false)
+  frequency   String?  // "monthly", "yearly"
+  userId      String
+  categoryId  String?
+  incomeSourceId String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category     Category?     @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  incomeSource IncomeSource? @relation(fields: [incomeSourceId], references: [id], onDelete: SetNull)
+
+  @@map("transactions")
+}
