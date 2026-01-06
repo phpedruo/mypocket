@@ -4,7 +4,11 @@ Sistema completo de controle financeiro pessoal com armazenamento local seguro, 
 
 ## 📖 Sobre o Projeto
 
+<<<<<<< HEAD
 MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece **privacidade total** ao armazenar todos os dados localmente no seu computador. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos em tempo real.
+=======
+MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece privacidade total ao armazenar todos os dados localmente. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos. Atualmente, não deve funcionar bem em telas menores, como smartphones.
+>>>>>>> ec7f8b23be713fa003d03cb0176cea2f23dfd5d0
 
 ### ✨ Principais Funcionalidades
 
@@ -26,11 +30,6 @@ MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais
 - 🗄️ **PostgreSQL 17 + Prisma 7**: ORM moderno com migrations e type generation
 - 🔐 **Autenticação Segura**: iron-session + bcrypt + rate limiting
 - 🛡️ **Proteções de Segurança**: 
-  - Rate limiting contra brute force
-  - Validação robusta de todas as entradas (Zod)
-  - Sanitização XSS com DOMPurify
-  - SQL Injection protegido pelo Prisma ORM
-  - SESSION_SECRET forte e validado
 - 📱 **Responsive Design**: Tailwind CSS com componentes reutilizáveis
 - 📊 **Visualização de Dados**: Recharts para gráficos (Line + Pie)
 - 🔄 **Real-time Updates**: Context API para atualização instantânea
