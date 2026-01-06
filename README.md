@@ -4,7 +4,7 @@ Sistema completo de controle financeiro pessoal com armazenamento local, desenvo
 
 ## 📖 Sobre o Projeto
 
-MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece privacidade total ao armazenar todos os dados localmente. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos.
+MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece privacidade total ao armazenar todos os dados localmente. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos. Atualmente, não deve funcionar bem em telas menores, como smartphones.
 
 ### ✨ Principais Funcionalidades
 
