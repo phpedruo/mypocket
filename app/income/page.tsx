@@ -87,7 +87,7 @@ export default function IncomePage() {
                 className="w-30 h-30"
               />
             </div>
-            <span className="text-4xl font-bold text-slate-800 font-raleway">My Pocket</span>
+            <span className="text-4xl font-bold text-slate-800 font-dm-serif">My Pocket</span>
           </div>
           <h1 className="text-4xl font-bold text-slate-800 mb-2">
             Perfeito, {userName}! 💚
@@ -132,7 +132,7 @@ export default function IncomePage() {
           <button
             onClick={handleContinue}
             disabled={selectedIncomes.length === 0}
-            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-slate-300 disabled:to-slate-400 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-slate-300 disabled:to-slate-400 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed cursor-pointer"
           >
             Finalizar e Ver Dashboard →
           </button>

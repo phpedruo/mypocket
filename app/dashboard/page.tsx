@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import DashboardClient from '@/components/DashboardClient';
+import { TransactionsProvider } from '@/lib/hooks/useTransactions';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -28,5 +29,9 @@ export default function DashboardPage() {
     }
   };
 
-  return <DashboardClient />;
+  return (
+    <TransactionsProvider>
+      <DashboardClient />
+    </TransactionsProvider>
+  );
 }

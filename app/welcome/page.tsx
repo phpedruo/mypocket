@@ -66,7 +66,7 @@ export default function WelcomePage() {
         </div>
 
         {/* Welcome Text */}
-        <h1 className="text-6xl font-bold text-slate-800 mb-6 font-raleway">
+        <h1 className="text-6xl font-bold text-slate-800 mb-6 font-dm-serif">
           Bem-vindo ao My Pocket! 💰
         </h1>
         
@@ -92,7 +92,7 @@ export default function WelcomePage() {
 
           <button
             type="submit"
-            className="w-full mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xl font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105"
+            className="w-full mt-6 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white text-xl font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 cursor-pointer"
           >
             Continuar →
           </button>

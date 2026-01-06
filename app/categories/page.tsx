@@ -23,38 +23,36 @@ const expenseCategories = {
     title: '📊 Despesas Variáveis',
     description: 'Gastos que mudam de acordo com o consumo',
     items: [
-      { id: 'alimentacao', name: 'Alimentação (supermercado)', icon: '🛒' },
-      { id: 'restaurantes', name: 'Restaurantes', icon: '🍽️' },
-      { id: 'transporte', name: 'Transporte (combustível)', icon: '⛽' },
       { id: 'agua', name: 'Água', icon: '💧' },
       { id: 'luz', name: 'Luz', icon: '💡' },
       { id: 'gas', name: 'Gás', icon: '🔥' },
       { id: 'internet', name: 'Internet', icon: '🌐' },
-      { id: 'compras', name: 'Compras (roupas, acessórios)', icon: '👕' }
+      { id: 'combustivel', name: 'Combustível', icon: '⛽' }
     ]
   },
   essential: {
     title: '❤️ Despesas Essenciais',
     description: 'Necessidades básicas para qualidade de vida',
     items: [
-      { id: 'moradia_essencial', name: 'Moradia', icon: '🏡' },
-      { id: 'alimentacao_essencial', name: 'Alimentação', icon: '🍎' },
+      { id: 'alimentacao', name: 'Alimentação', icon: '🛒' },
       { id: 'saude', name: 'Saúde (plano, remédios)', icon: '⚕️' },
-      { id: 'transporte_essencial', name: 'Transporte básico', icon: '🚌' },
-      { id: 'vestuario', name: 'Vestuário básico', icon: '👔' },
-      { id: 'educacao', name: 'Educação', icon: '📚' }
+      { id: 'transporte', name: 'Transporte', icon: '🚌' },
+      { id: 'vestuario', name: 'Vestuário', icon: '👔' },
+      { id: 'educacao', name: 'Educação', icon: '📚' },
+      { id: 'higiene', name: 'Higiene e Limpeza', icon: '🧼' }
     ]
   },
   nonEssential: {
     title: '🎉 Despesas Não Essenciais',
     description: 'Gastos com entretenimento e luxos',
     items: [
+      { id: 'restaurantes', name: 'Restaurantes', icon: '🍽️' },
       { id: 'entretenimento', name: 'Entretenimento', icon: '🎮' },
-      { id: 'luxos', name: 'Luxos', icon: '💎' },
-      { id: 'impulso', name: 'Compras por impulso', icon: '🛍️' },
-      { id: 'restaurantes_luxo', name: 'Restaurantes (além do básico)', icon: '🍷' },
+      { id: 'compras', name: 'Compras (roupas, acessórios)', icon: '🛍️' },
       { id: 'viagens', name: 'Viagens', icon: '✈️' },
-      { id: 'hobbies', name: 'Hobbies', icon: '🎨' }
+      { id: 'hobbies', name: 'Hobbies', icon: '🎨' },
+      { id: 'luxos', name: 'Luxos', icon: '💎' },
+      { id: 'outros_despesa', name: 'Outros', icon: '📦' }
     ]
   }
 };
@@ -130,7 +128,7 @@ if (loading) {
                 className="w-30 h-30"
               />
             </div>
-            <span className="text-4xl font-bold text-slate-800 font-raleway">My Pocket</span>
+            <span className="text-4xl font-bold text-slate-800 font-dm-serif">My Pocket</span>
           </div>
           <h1 className="text-4xl font-bold text-slate-800 mb-2">
             Olá, {userName}! 👋
@@ -180,7 +178,7 @@ if (loading) {
           <button
             onClick={handleContinue}
             disabled={selectedCategories.length === 0}
-            className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-300 disabled:to-slate-400 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+            className="bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-300 disabled:to-slate-400 text-white text-lg font-bold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed cursor-pointer"
           >
             Continuar →
           </button>

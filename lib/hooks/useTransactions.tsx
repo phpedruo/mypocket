@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, createContext, useContext, ReactNode } from 'react';
 import { startOfMonth, endOfMonth, subMonths, format } from 'date-fns';
 
 export interface Transaction {
@@ -13,14 +13,28 @@ export interface Transaction {
   incomeSource?: { id: string; name: string } | null;
 }
 
-// Hook principal - Gerencia transações
-export function useTransactions() {
+// Contexto para compartilhar transações
+const TransactionsContext = createContext<{
+  transactions: Transaction[];
+  loading: boolean;
+  error: string | null;
+  addTransaction: (transaction: Omit<Transaction, 'id'>) => Promise<void>;
+  updateTransaction: (transaction: Transaction) => Promise<void>;
+  deleteTransaction: (id: string) => Promise<void>;
+  refreshTransactions: (preserveScroll?: boolean) => Promise<void>;
+} | null>(null);
+
+// Provider do contexto
+export function TransactionsProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchTransactions = useCallback(async () => {
+  const fetchTransactions = useCallback(async (preserveScroll: boolean = false) => {
     try {
+      // Salvar posição do scroll antes de atualizar
+      const scrollY = preserveScroll ? window.scrollY : 0;
+      
       setLoading(true);
       const response = await fetch('/api/transactions');
       
@@ -34,6 +48,13 @@ export function useTransactions() {
         date: new Date(t.date),
       })));
       setError(null);
+      
+      // Restaurar posição do scroll após atualizar
+      if (preserveScroll) {
+        requestAnimationFrame(() => {
+          window.scrollTo(0, scrollY);
+        });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     } finally {
@@ -61,7 +82,7 @@ export function useTransactions() {
         throw new Error('Erro ao adicionar transação');
       }
 
-      await fetchTransactions();
+      await fetchTransactions(true);
     } catch (err) {
       throw err;
     }
@@ -83,7 +104,7 @@ export function useTransactions() {
         throw new Error('Erro ao atualizar transação');
       }
 
-      await fetchTransactions();
+      await fetchTransactions(true);
     } catch (err) {
       throw err;
     }
@@ -99,23 +120,34 @@ export function useTransactions() {
         throw new Error('Erro ao deletar transação');
       }
 
-      await fetchTransactions();
+      await fetchTransactions(true);
     } catch (err) {
       throw err;
     }
   };
 
+  return (
+    <TransactionsContext.Provider value={{
+      transactions,
+      loading,
+      error,
+      addTransaction,
+      updateTransaction,
+      deleteTransaction,
+      refreshTransactions: fetchTransactions,
+    }}>
+      {children}
+    </TransactionsContext.Provider>
+  );
+}
 
-
-  return {
-    transactions,
-    loading,
-    error,
-    addTransaction,
-    updateTransaction,
-    deleteTransaction,
-    refreshTransactions: fetchTransactions,
-  };
+// Hook principal - Gerencia transações
+export function useTransactions() {
+  const context = useContext(TransactionsContext);
+  if (!context) {
+    throw new Error('useTransactions deve ser usado dentro de TransactionsProvider');
+  }
+  return context;
 }
 
 // Hook para estatísticas financeiras

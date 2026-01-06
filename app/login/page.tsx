@@ -87,7 +87,7 @@ export default function LoginPage() {
 
         {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-slate-800 mb-2 font-raleway">
+          <h1 className="text-4xl font-bold text-slate-800 mb-2 font-dm-serif">
             {isSignUp ? 'Criar Conta' : 'Bem-vindo de volta'}
           </h1>
           <p className="text-slate-600">
@@ -158,7 +158,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-400 disabled:to-slate-500 text-white text-lg font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed"
+              className="w-full bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 disabled:from-slate-400 disabled:to-slate-500 text-white text-lg font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? '⏳ Aguarde...' : (isSignUp ? 'Criar Conta' : 'Entrar')}
             </button>
@@ -169,7 +169,7 @@ export default function LoginPage() {
                 setIsSignUp(!isSignUp);
                 setMessage('');
               }}
-              className="w-full text-slate-600 hover:text-slate-800 font-medium"
+              className="w-full text-slate-600 hover:text-slate-800 font-medium cursor-pointer"
             >
               {isSignUp ? 'Já tem conta? Entrar' : 'Não tem conta? Criar agora'}
             </button>

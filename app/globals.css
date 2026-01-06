@@ -10,7 +10,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-raleway: var(--font-raleway);
+  --font-inter: var(--font-inter);
+  --font-dm-serif: var(--font-dm-serif);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,9 +24,9 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
 }
 
-.font-raleway {
-  font-family: var(--font-raleway);
+.font-dm-serif {
+  font-family: var(--font-dm-serif), serif;
 }
