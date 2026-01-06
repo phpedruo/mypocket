@@ -267,7 +267,7 @@ Configure transações que se repetem:
 
 ### 🐛 Reportar Vulnerabilidades
 
-Se encontrar uma vulnerabilidade de segurança, **NÃO abra uma issue pública**.
+Se encontrar uma vulnerabilidade de segurança e relatar ficarei agradecido 👍
 
 ## 🧰 Comandos Úteis
 
