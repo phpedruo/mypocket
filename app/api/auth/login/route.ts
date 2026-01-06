@@ -2,22 +2,38 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import bcrypt from 'bcryptjs';
+import { loginSchema } from '@/lib/validation';
+import { sanitizeString } from '@/lib/sanitize';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    // Rate limiting - crítico para login
+    const ip = getClientIp(request);
+    const rateLimitResult = rateLimit(ip);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
 
-    // Validações
-    if (!email || !password) {
+    const body = await request.json();
+
+    // Validação com Zod
+    const validation = loginSchema.safeParse(body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Email e senha são obrigatórios' },
+        { error: validation.error.errors[0].message },
         { status: 400 }
       );
     }
 
+    const { email, password } = validation.data;
+
+    // Sanitização
+    const sanitizedEmail = sanitizeString(email.toLowerCase());
+
     // Busca usuário
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { email: sanitizedEmail },
     });
 
     if (!user) {

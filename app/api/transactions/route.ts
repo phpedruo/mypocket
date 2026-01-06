@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
+import { transactionSchema } from '@/lib/validation';
+import { sanitizeString } from '@/lib/sanitize';
 
 // GET - Listar transações do usuário
 export async function GET(request: NextRequest) {
@@ -46,21 +48,26 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json();
-    const { type, amount, description, date, recurring, frequency, categoryId, incomeSourceId } = data;
 
-    // Validações
-    if (!type || !amount || !description || !date) {
+    // Validação com Zod
+    const validation = transactionSchema.safeParse(data);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Campos obrigatórios faltando' },
+        { error: validation.error.errors[0].message },
         { status: 400 }
       );
     }
 
+    const { type, amount, description, date, recurring, frequency, categoryId, incomeSourceId } = validation.data;
+
+    // Sanitização
+    const sanitizedDescription = sanitizeString(description);
+
     const transaction = await prisma.transaction.create({
       data: {
         type,
-        amount: parseFloat(amount),
-        description,
+        amount: typeof amount === 'string' ? parseFloat(amount) : amount,
+        description: sanitizedDescription,
         date: new Date(date),
         recurring: recurring || false,
         frequency: frequency || null,

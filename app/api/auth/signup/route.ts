@@ -2,22 +2,39 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getSession } from '@/lib/session';
 import bcrypt from 'bcryptjs';
+import { signupSchema } from '@/lib/validation';
+import { sanitizeString } from '@/lib/sanitize';
+import { rateLimit, getClientIp } from '@/lib/rateLimit';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password, name } = await request.json();
+    // Rate limiting
+    const ip = getClientIp(request);
+    const rateLimitResult = rateLimit(ip);
+    if (!rateLimitResult.allowed) {
+      return rateLimitResult.response!;
+    }
 
-    // Validações
-    if (!email || !password || !name) {
+    const body = await request.json();
+
+    // Validação com Zod
+    const validation = signupSchema.safeParse(body);
+    if (!validation.success) {
       return NextResponse.json(
-        { error: 'Email, senha e nome são obrigatórios' },
+        { error: validation.error.errors[0].message },
         { status: 400 }
       );
     }
 
+    const { email, password, name } = validation.data;
+
+    // Sanitização adicional
+    const sanitizedEmail = sanitizeString(email.toLowerCase());
+    const sanitizedName = sanitizeString(name);
+
     // Verifica se usuário já existe
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: sanitizedEmail },
     });
 
     if (existingUser) {
@@ -27,15 +44,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Hash da senha
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Hash da senha (12 rounds para melhor segurança)
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     // Cria usuário
     const user = await prisma.user.create({
       data: {
-        email,
+        email: sanitizedEmail,
         password: hashedPassword,
-        name,
+        name: sanitizedName,
       },
     });
 
