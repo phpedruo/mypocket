@@ -4,11 +4,7 @@ Sistema completo de controle financeiro pessoal com armazenamento local seguro, 
 
 ## 📖 Sobre o Projeto
 
-<<<<<<< HEAD
-MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece **privacidade total** ao armazenar todos os dados localmente no seu computador. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos em tempo real.
-=======
 MyPocket é uma aplicação web moderna para gerenciamento de finanças pessoais que oferece privacidade total ao armazenar todos os dados localmente. O sistema permite controlar receitas, despesas, categorias personalizadas e visualizar a evolução financeira através de gráficos interativos. Atualmente, não deve funcionar bem em telas menores, como smartphones.
->>>>>>> ec7f8b23be713fa003d03cb0176cea2f23dfd5d0
 
 ### ✨ Principais Funcionalidades
 
@@ -175,25 +171,6 @@ Acesse **[http://localhost:3000](http://localhost:3000)** no navegador.
    - Selecione suas fontes de renda
 3. **Comece a registrar** suas transações!
 
-## 💾 Banco de Dados
-
-### Schema Principal
-
-O banco de dados utiliza PostgreSQL 17 com Prisma ORM e contém as seguintes entidades:
-
-- **Users**: Informações de autenticação e perfil do usuário
-- **Categories**: Categorias personalizadas de despesas e receitas
-- **Income Sources**: Fontes de renda configuradas pelo usuário
-- **Transactions**: Registro de todas as transações financeiras
-
-Todas as tabelas possuem:
-- Identificadores únicos (UUID)
-- Timestamps de criação e atualização
-- Relacionamentos adequados com constraints de integridade
-- Campos obrigatórios e opcionais validados
-
-Para ver o schema completo, consulte [`prisma/schema.prisma`](prisma/schema.prisma).
-
 ## 📊 Funcionalidades Detalhadas
 
 ### Dashboard Principal
@@ -289,8 +266,6 @@ Configure transações que se repetem:
 ### 🐛 Reportar Vulnerabilidades
 
 Se encontrar uma vulnerabilidade de segurança, **NÃO abra uma issue pública**.
-
-Leia [SECURITY.md](SECURITY.md) para detalhes completos sobre segurança.
 
 ## 🧰 Comandos Úteis
 
